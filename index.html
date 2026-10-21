@@ -43,9 +43,13 @@ function targetName(){const it=itemNow();if(!it)return '入力先なし';if(stat
 function selectTarget(i,field,j=0){state.selected={item:i,field,adjustment:j};state.buffer=String(selectedValue()??0);state.left=null;state.operator=null;state.waiting=false;render()}
 function renameField(i,field,j){const it=state.items[i];const obj=field==='price'?it:it.adjustments[j];const key=field==='price'?'priceName':'name';const old=obj[key]|| (field==='price'?'料金':'数値項目');const n=prompt('この数値項目の名称',old);if(n===null)return;obj[key]=n.trim()||old;save();render()}
 function render(){
-$('screenLabel').textContent='入力先：'+targetName();$('screenValue').textContent=fmt(state.buffer);
-const targets=$('targets');targets.innerHTML='';
+const screenLabel=$('screenLabel'),screenValue=$('screenValue');
+if(screenLabel)screenLabel.textContent='入力先：'+targetName();
+if(screenValue)screenValue.textContent=fmt(state.buffer);
+const targets=$('targets');
+if(targets){targets.innerHTML='';
 state.items.forEach((it,i)=>{const entries=[['price',it.priceName,0],...it.adjustments.map((a,j)=>['adjustment',a.name,j])];entries.forEach(([field,name,j])=>{const b=document.createElement('button');b.className='targetBtn'+(state.selected.item===i&&state.selected.field===field&&(field!=='adjustment'||state.selected.adjustment===j)?' active':'');b.textContent=it.name+' · '+name;b.onclick=()=>selectTarget(i,field,j);targets.appendChild(b)})});
+}
 
 $('durationYears').value=Number(state.durationYears)||0;$('durationMonths').value=Number(state.durationMonths)||0;
 const cards=$('cards');cards.innerHTML='';
