@@ -40,7 +40,7 @@ function loadNamedSet(){const i=Number($('savedSetSelect').value);if(!Number.isI
 function newSet(){save();const items=blankItems();state.comparisons.push({id:makeId(),name:'新規セット（未保存）',items});state.activeComparison=state.comparisons.length-1;state.items=items;state.selected={item:0,field:'price',adjustment:0};state.buffer='0';save();render()}
 function deleteNamedSet(){if(state.comparisons.length<=1){alert('保存セットは最低1つ必要です');return}const i=Number($('savedSetSelect').value);if(!state.comparisons[i])return;if(!confirm('保存セット「'+state.comparisons[i].name+'」を削除しますか？'))return;state.comparisons.splice(i,1);state.activeComparison=0;state.items=state.comparisons[0].items;state.selected={item:0,field:'price',adjustment:0};save();render()}
 
-const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('ja-JP',{maximumFractionDigits:8}),money=n=>fmt(n)+'円';
+const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('ja-JP',{minimumFractionDigits:0,maximumFractionDigits:2}),money=n=>fmt(n)+'円';
 function save(){const g=state.comparisons?.[state.activeComparison];if(g)g.items=state.items;localStorage.setItem(STORE,JSON.stringify(state))}
 function itemNow(){return state.items[state.selected.item]}
 function total(it){return Number(it.price||0)+it.adjustments.reduce((s,a)=>s+(Number(a.amount)||0),0)}
